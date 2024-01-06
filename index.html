@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Google Meet</title>
@@ -29,21 +29,21 @@
     <script src="public/Assets/js/app.js"></script>
     <script>
       $(function () {
-        let urlParams = new URLSearchParams(window.location.search)
-        let meeting_id = urlParams.get('meetingID')
+        let urlParams = new URLSearchParams(window.location.search);
+        let meeting_id = urlParams.get('meetingID');
 
-        let user_id = window.prompt('Enter your userid')
+        let user_id = window.prompt('Enter your userid');
 
         if (!user_id || !meeting_id) {
-          alert('User id or meeting id is missing')
-          window.location.href = '/action.html'
-          return
+          alert('User id or meeting id is missing');
+          window.location.href = '/action.html';
+          return;
         }
 
-        $('#meetingContainer').show()
+        $('#meetingContainer').show();
 
-        MyApp._init(user_id, meeting_id)
-      })
+        MyApp._init(user_id, meeting_id);
+      });
     </script>
   </head>
 
@@ -52,7 +52,11 @@
     <main class="d-flex flex-column home-wrap">
       <div class="g-top text-light">
         <div class="top-remote-video-show-wrap d-flex">
-          <div id="meetingContainer" class="w-75" style="display: none;">
+          <div
+            id="meetingContainer"
+            class="w-75"
+            style="display: none; flex-basis: 75%"
+          >
             <div class="class-wrap" style="background-color: #000">
               <div
                 class="video-wrap"
@@ -62,11 +66,7 @@
                 <div id="me" class="userbox display-center flex-column">
                   <h2 class="display-center" style="font-size: 14px"></h2>
                   <div class="display-center">
-                    <video
-                      autoplay
-                      muted
-                      id="localVideoPlayer"
-                    ></video>
+                    <video autoplay muted id="localVideoPlayer"></video>
                   </div>
                 </div>
                 <div
@@ -77,11 +77,82 @@
                   <h2 class="display-center" style="font-size: 14px"></h2>
                   <div class="display-center">
                     <video autoplay muted id="localVideoPlayer"></video>
-                    <audio
-                      autoplay
-                      controls
-                      style="display: none"
-                    ></audio>
+                    <audio autoplay controls style="display: none"></audio>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="g-right-details-wrap bg-light text-secondary h-100"
+            style="flex-basis: 25%; z-index: 1"
+          >
+            <div
+              class="people-chat-wrap d-flex justify-content-between align-items-center pr-3 pl-3"
+              style="height: 10vh"
+            >
+              <div class="meeting-heading font-weight-bold cursor-pointer">
+                Meeting Details
+              </div>
+              <div class="meeting-heading-cross display-center cursor-pointer">
+                <span class="material-icons">clear</span>
+              </div>
+            </div>
+            <div
+              class="meeting-heading-wrap d-flex justify-content-between align-items-center ml-3 mr-3 pr-3 pl-3"
+              style="height: 10vh; font-size: 14px"
+            >
+              <div class="people-heading display-center cursor-pointer">
+                <div class="people-heading-icon display-center mr-1">
+                  <span class="material-icons">people</span>
+                </div>
+                <div class="people-heading-text display-center">
+                  Participant (<span class="participant-count">1</span>)
+                </div>
+              </div>
+              <div
+                class="chat-heading d-flex just-content-round align-items-center cursor-pointer"
+              >
+                <div class="chat-heading-icon display-center mr-1">
+                  <span class="material-icons">message</span>
+                </div>
+                <div class="chat-heading-text">Chat</div>
+              </div>
+            </div>
+
+            <div
+              class="in-call-chat-wrap mx-3 px-3"
+              style="font-size: 14px; height: 69vh; overflow-y: scroll"
+            >
+              <div
+                class="in-call-wrap-up"
+                style="display: none !important"
+              ></div>
+              <div
+                class="chat-show-wrap text-secondary d-flex flex-column justify-content-between h-100"
+                style="font-size: 14px"
+              >
+                <div class="chat-message-show" id="messages"></div>
+                <div
+                  class="chat-message-sent d-flex justify-content-between align-items-center"
+                  style="margin-bottom: 35px"
+                >
+                  <div class="chat-message-sent-input" style="width: 85%">
+                    <input
+                      type="text"
+                      name=""
+                      id=""
+                      class="chat-message-sent-input-field w-100"
+                      placeholder="send a message to everyone"
+                      style="border: none"
+                    />
+                  </div>
+                  <div
+                    class="chat-message-sent-action display-center"
+                    id="btnsend"
+                    style="color: teal"
+                  >
+                    <span class="material-icons">send</span>
                   </div>
                 </div>
               </div>
@@ -107,17 +178,20 @@
         class="g-bottom bg-light m-0 d-flex justify-content-between align-items-center"
       >
         <div class="bottom-left d-flex" style="height: 10vh">
-          <div class="display-center cursor-pointer meeting-details-button">
+          <div class="display-center meeting-details-button">
             Meeting details
             <span class="material-icons">keyboard_arrow_down</span>
           </div>
         </div>
-        <div class="bottom-middle d-flex justify-content-center" style="10vh">
+        <div
+          class="bottom-middle d-flex justify-content-center"
+          style="height: 10vh"
+        >
           <div
             class="mic-toggle-wrap action-icon-style display-center mr-2 cursor-pointer"
             id="micMuteUnmute"
           >
-            <span class="material-icons" style="width: 100%;">mic_off</span>
+            <span class="material-icons" style="width: 100%">mic_off</span>
           </div>
           <div
             class="end-call-wrap action-icon-style display-center mr-2 cursor-pointer"
@@ -128,7 +202,7 @@
             class="video-toggle-wrap action-icon-style display-center cursor-pointer"
             id="videoCamOnOff"
           >
-            <span class="material-icons" style="width: 100%;">videocam_off</span>
+            <span class="material-icons" style="width: 100%">videocam_off</span>
           </div>
         </div>
         <div
