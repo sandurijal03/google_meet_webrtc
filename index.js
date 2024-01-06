@@ -36,11 +36,32 @@ const mountServer = () => {
 
       socket.emit('inform_me_about_other_user', other_users)
     })
+
     socket.on('SDPProcess', (data) => {
       socket.to(data.to_connnectionId).emit('SDPProcess', {
         message: data.message,
         from_connid: socket.id,
       })
+    })
+
+    socket.on('disconnect', () => {
+      let disconnectedUser = userConnections.find(
+        (user) => user.connectionId === socket.id,
+      )
+      if (disconnectedUser) {
+        let meetingId = disconnectedUser.meeting_id
+        userConnections = userConnections.filter(
+          (user) => user.connectionId !== socket.id,
+        )
+        let list = userConnections.filter(
+          (user) => user.meeting_id === meetingId,
+        )
+        list.forEach((v) => {
+          socket.to(v.connectionId).emit('inform_about_disconnected_user', {
+            connectionId: socket.id,
+          })
+        })
+      }
     })
   })
 }

@@ -312,6 +312,27 @@ var AppProcess = (function () {
     }
   }
 
+  async function closeConnection(connectionId) {
+    peers_connection_ids[connectionId] = null
+    if (peers_connection[connectionId]) {
+      peers_connection[connectionId].close()
+      peers_connection[connectionId] = null
+    }
+
+    if (remote_aud_stream[connectionId]) {
+      remote_aud_stream[connectionId].getTracks().forEach((t) => {
+        if (t.stop) t.stop()
+      })
+      remote_aud_stream[connectionId] = null
+    }
+    if (remote_vid_stream[connectionId]) {
+      remote_vid_stream[connectionId].getTracks().forEach((t) => {
+        if (t.stop) t.stop()
+      })
+      remote_vid_stream[connectionId] = null
+    }
+  }
+
   return {
     setNewConnection: async function (connectionId) {
       await setConnection(connectionId)
@@ -321,6 +342,9 @@ var AppProcess = (function () {
     },
     processClientFunc: async function (data, from_connid) {
       await SDPProcess(data, from_connid)
+    },
+    closeConnectionCall: async function (connectionId) {
+      await closeConnection(connectionId)
     },
   }
 })()
@@ -358,6 +382,11 @@ var MyApp = (function () {
           })
         }
       }
+    })
+
+    socket.on('inform_about_disconnected_user', (data) => {
+      $('#' + data.connectionId).remove()
+      AppProcess.closeConnectionCall(data.connectionId)
     })
 
     socket.on('inform_others_about_me', (data) => {
