@@ -81,7 +81,7 @@ var AppProcess = (function () {
         await loadAudio()
       }
       if (!audio) {
-        alert('Audio permission has not been granter')
+        alert('Audio permission has not been granted')
         return
       }
 
@@ -130,6 +130,10 @@ var AppProcess = (function () {
       $('#videoCamOnOff').html(
         "<span class='material-icons' style='width:100%'>videocam_off</span>",
       )
+
+      $('#screenShareOnOff').html(
+        '<span class="material-icons">present_to_all</span><div class="">Present Now</div>',
+      )
       video_state = newVideoState
       removeVideoStream(rtp_vid_senders)
       return
@@ -157,6 +161,12 @@ var AppProcess = (function () {
           },
           audio: false,
         })
+        videoStream.oninactive = (e) => {
+          removeVideoStream(rtp_vid_senders)
+          $('#screenShareOnOff').html(
+            '<span class="material-icons">present_to_all</span><div>Present Now</div>',
+          )
+        }
       }
       if (videoStream && videoStream.getVideoTracks().length > 0) {
         videoCamTrack = videoStream.getVideoTracks()[0]
@@ -171,6 +181,21 @@ var AppProcess = (function () {
     }
 
     video_state = newVideoState
+    if (newVideoState === video_states.Camera) {
+      $('#videoCamOnOff').html(
+        "<span class='material-icons' style='width:100%'>videocam</span>",
+      )
+      $('#screenShareOnOff').html(
+        '<span class="material-icons">present_to_all</span><div>Present Now</div>',
+      )
+    } else if (newVideoState === video_states.ScreenShare) {
+      $('#screenShareOnOff').html(
+        '<span class="material-icons text-success">present_to_all</span><div class="text-success">Stop Present</div>',
+      )
+      $('#videoCamOnOff').html(
+        "<span class='material-icons' style='width:100%'>videocam_off</span>",
+      )
+    }
   }
 
   let iceConfiguration = {
