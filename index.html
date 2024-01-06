@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Google Meet</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./public/Assets/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./public/Assets/css/style.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"
+      integrity="sha512-zoJXRvW2gC8Z0Xo3lBbao5+AS3g6YWr5ztKqaicua11xHo+AvE1b0lT9ODgrHTmNUxeCw0Ry4BGRYZfXu70weg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="public/Assets/js/jquery-3.4.1.min.js"></script>
+    <script src="public/Assets/js/app.js"></script>
+    <script>
+      $(function () {
+        let urlParams = new URLSearchParams(window.location.search)
+        let meeting_id = urlParams.get('meetingID')
+
+        let user_id = window.prompt('Enter your userid')
+
+        if (!user_id || !meeting_id) {
+          alert('User id or meeting id is missing')
+          window.location.href = '/action.html'
+          return
+        }
+
+        $('#meetingContainer').show()
+
+        MyApp._init(user_id, meeting_id)
+      })
+    </script>
+  </head>
+
+  <body>
+    <!-- <a href="./action.html">action</a> -->
+    <main class="d-flex flex-column home-wrap">
+      <div class="g-top text-light">
+        <div class="top-remote-video-show-wrap d-flex">
+          <div id="meetingContainer" class="w-75" style="display: none;">
+            <div class="class-wrap" style="background-color: #000">
+              <div
+                class="video-wrap"
+                id="divUsers"
+                style="display: flex; flex-wrap: wrap"
+              >
+                <div id="me" class="userbox display-center flex-column">
+                  <h2 class="display-center" style="font-size: 14px"></h2>
+                  <div class="display-center">
+                    <video
+                      autoplay
+                      muted
+                      id="localVideoPlayer"
+                    ></video>
+                  </div>
+                </div>
+                <div
+                  id="otherTemplate"
+                  class="userbox display-center flex-column"
+                  style="display: none"
+                >
+                  <h2 class="display-center" style="font-size: 14px"></h2>
+                  <div class="display-center">
+                    <video autoplay muted id="localVideoPlayer"></video>
+                    <audio
+                      autoplay
+                      controls
+                      style="display: none"
+                    ></audio>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="g-top-left bg-light text-secondary w-25 d-flex align-items-center justify-content-between pl-2 pr-2"
+        >
+          <div class="top-left-participant-wrap pt-2 cursor-pointer">
+            <div class="top-left-participant-icon">
+              <span class="material-icons">people</span>
+            </div>
+            <div class="top-left-participant-count"></div>
+          </div>
+          <div class="top-left-chat-wrap pt-2 cursor-pointer">
+            <span class="material-icons">message</span>
+          </div>
+          <div class="top-left-time-wrap"></div>
+        </div>
+      </div>
+      <div
+        class="g-bottom bg-light m-0 d-flex justify-content-between align-items-center"
+      >
+        <div class="bottom-left d-flex" style="height: 10vh">
+          <div class="display-center cursor-pointer meeting-details-button">
+            Meeting details
+            <span class="material-icons">keyboard_arrow_down</span>
+          </div>
+        </div>
+        <div class="bottom-middle d-flex justify-content-center" style="10vh">
+          <div
+            class="mic-toggle-wrap action-icon-style display-center mr-2 cursor-pointer"
+            id="micMuteUnmute"
+          >
+            <span class="material-icons" style="width: 100%;">mic_off</span>
+          </div>
+          <div
+            class="end-call-wrap action-icon-style display-center mr-2 cursor-pointer"
+          >
+            <span class="material-icons text-danger">call</span>
+          </div>
+          <div
+            class="video-toggle-wrap action-icon-style display-center cursor-pointer"
+            id="videoCamOnOff"
+          >
+            <span class="material-icons" style="width: 100%;">videocam_off</span>
+          </div>
+        </div>
+        <div
+          class="bottom-right d-flex justify-content-center align-items-center mr-3"
+          style="height: 10vh"
+        >
+          <div
+            class="present-now-wrap d-flex justify-content-center flex-column align-items-center mr-5 cursor-pointer"
+            id="screenShareOnOff"
+          >
+            <span class="material-icons">present_to_all</span>
+            <div class="">Present Now</div>
+          </div>
+          <div
+            class="option-wrap display-center mr-2 cursor-pointer"
+            style="height: 10vh; position: relative"
+          >
+            <div class="option-icon">
+              <span class="material-icons">more_vert</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
