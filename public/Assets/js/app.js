@@ -391,14 +391,17 @@ var MyApp = (function () {
     })
 
     socket.on('inform_others_about_me', (data) => {
-      addUser(data.other_user_id, data.connId)
+      console.log('data', data)
+      addUser(data.other_user_id, data.connId, data.userNumber)
       AppProcess.setNewConnection(data.connId)
     })
 
     socket.on('inform_me_about_other_user', (other_users) => {
+      let userNumber = other_users.length
+      let userNum = userNumber + 1
       if (other_users) {
         for (let i in other_users) {
-          addUser(other_users[i].user_id, other_users[i].connection_id)
+          addUser(other_users[i].user_id, other_users[i].connection_id, userNum)
           AppProcess.setNewConnection(other_users[i].connection_id)
         }
       }
@@ -431,7 +434,7 @@ var MyApp = (function () {
 
   function eventHandling() {
     $('#btnsend').on('click', () => {
-      let messageData = $("#msgbox").val()
+      let messageData = $('#msgbox').val()
       socket.emit('sendMessage', messageData)
       let time = new Date()
       let lTime = time.toLocaleString('en-US', {
@@ -453,7 +456,7 @@ var MyApp = (function () {
     })
   }
 
-  function addUser(otherUserId, connectionId) {
+  function addUser(otherUserId, connectionId, userNumber) {
     let newDivId = $('#otherTemplate').clone()
     newDivId = newDivId.attr('id', connectionId).addClass('other')
     newDivId.find('h2').text(otherUserId)
@@ -462,8 +465,23 @@ var MyApp = (function () {
     newDivId.show()
 
     $('#divUsers').append(newDivId)
+    $('#in-call-wrap-up').append(
+      '<div class="in-call-wrap d-flex justify-content-between align-items-center mb-3" id="participant_' +
+        connectionId +
+        '"><div class="participant-img-name-wrap display-center cursor-pointer"><div class="participant-img"><img src="public/Assets/images/other.jpg" alt="" class="border border-secondary"style="height: 40px; width: 40px; border-radius: 50%" /></div><div class="participant-name ml-2">' +
+        otherUserId +
+        '</div></div><div class="participant-action-wrap display-center"><div class="participant-action-dot display-center mr-2 cursor-pointer">                   <span class="material-icons">more_vert</span></div><div class="participant-action-pin display-center mr-2 cursor-pointer"><span class="material-icons">push_pin</span></div></div></div>',
+    )
+    $(".participant-count").text(userNumber)
   }
-
+  $(document).on('click', '.people-heading', () => {
+    $('.in-call-wrap-up').show(300)
+    $('.chat-show-wrap').hide(300)
+  })
+  $(document).on('click', '.chat-heading', () => {
+    $('.in-call-wrap-up').hide(300)
+    $('.chat-show-wrap').show(300)
+  })
   return {
     _init: function (uid, mid) {
       init(uid, mid)

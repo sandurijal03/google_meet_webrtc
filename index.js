@@ -27,10 +27,12 @@ const mountServer = () => {
         meeting_id: data.meetingid,
       })
 
+      let userCount = userConnections.length;
       other_users.forEach((other_user) => {
         socket.to(other_user.connectionId).emit('inform_others_about_me', {
           other_user_id: data.displayName,
           connId: socket.id,
+          userNumber:userCount
         })
       })
 
