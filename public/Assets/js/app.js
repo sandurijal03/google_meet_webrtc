@@ -360,6 +360,7 @@ var MyApp = (function () {
     $('#me h2').text(user_id + '(Me)')
     document.title = user_id
     event_process_for_signaling_server()
+    eventHandling()
   }
 
   function event_process_for_signaling_server() {
@@ -405,6 +406,50 @@ var MyApp = (function () {
 
     socket.on('SDPProcess', async function (data) {
       await AppProcess.processClientFunc(data.message, data.from_connid)
+    })
+
+    socket.on('showChatMessage', (data) => {
+      console.log('data', data)
+      let time = new Date()
+      let lTime = time.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      })
+      let div = $('<div>').html(
+        "<span class='font-weight-bold' style='color:black'>" +
+          data.from +
+          '</span>' +
+          lTime +
+          '</br>' +
+          data.message,
+      )
+
+      $('#messages').append(div)
+    })
+  }
+
+  function eventHandling() {
+    $('#btnsend').on('click', () => {
+      let messageData = $("#msgbox").val()
+      socket.emit('sendMessage', messageData)
+      let time = new Date()
+      let lTime = time.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      })
+      let div = $('<div>').html(
+        "<span class='font-weight-bold' style='color:black'>" +
+          user_id +
+          '</span>' +
+          lTime +
+          '</br>' +
+          messageData,
+      )
+
+      $('#messages').append(div)
+      $('#msgbox').val('')
     })
   }
 

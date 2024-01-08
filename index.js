@@ -44,6 +44,25 @@ const mountServer = () => {
       })
     })
 
+    socket.on('sendMessage', (msg) => {
+      console.log('msg', msg)
+      let messageUser = userConnections.find(
+        (user) => user.connectionId === socket.id,
+      )
+      if (messageUser) {
+        let meetingId = messageUser.meeting_id
+        let from = messageUser.user_id
+        let list = userConnections.filter(
+          (user) => user.meeting_id === meetingId,
+        )
+        list.forEach((l) => {
+          socket
+            .to(l.connectionId)
+            .emit('showChatMessage', { from, message: msg })
+        })
+      }
+    })
+
     socket.on('disconnect', () => {
       let disconnectedUser = userConnections.find(
         (user) => user.connectionId === socket.id,
