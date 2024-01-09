@@ -458,6 +458,11 @@ var MyApp = (function () {
     })
     let url = window.location.href
     $('.meeting_url').text(url)
+
+
+    $("#divUsers").on("dblclick", "video", function() {
+      this.requestFullscreen()
+    })
   }
 
   function addUser(otherUserId, connectionId, userNumber) {
