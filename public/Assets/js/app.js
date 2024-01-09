@@ -456,6 +456,8 @@ var MyApp = (function () {
       $('#messages').append(div)
       $('#msgbox').val('')
     })
+    let url = window.location.href
+    $('.meeting_url').text(url)
   }
 
   function addUser(otherUserId, connectionId, userNumber) {
@@ -526,6 +528,19 @@ var MyApp = (function () {
   $(document).on('click', '.call-cancel-action', function () {
     $('.top-box-show').html('')
   })
+  $(document).on('click', '.copy_info', function () {
+    let $temp = $('<input>')
+    $('body').append($temp)
+    $temp.val($('.meeting_url').text()).select()
+    document.execCommand('copy')
+    $temp.remove()
+    $('.link-conf').show()
+    setTimeout(() => {
+      $('.link-conf').hide()
+    }, 3000)
+  })
+  let url = window.location.href
+  $('.meeting_url').text(url)
   return {
     _init: function (uid, mid) {
       init(uid, mid)
