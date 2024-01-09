@@ -135,3 +135,8 @@ video {
   -ms-transform: rotate(135deg);
   transform: rotate(135deg);
 }
+
+.active {
+  background-color: #00808047;
+  border-radius:5px;
+}

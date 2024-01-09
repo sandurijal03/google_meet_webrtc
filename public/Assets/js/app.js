@@ -387,6 +387,8 @@ var MyApp = (function () {
 
     socket.on('inform_about_disconnected_user', (data) => {
       $('#' + data.connectionId).remove()
+      $('.participant-count').text(data.userNumber)
+      $('#participant_' + data.connectionId + '').remove()
       AppProcess.closeConnectionCall(data.connectionId)
     })
 
@@ -465,20 +467,38 @@ var MyApp = (function () {
     newDivId.show()
 
     $('#divUsers').append(newDivId)
-    $('#in-call-wrap-up').append(
+    $('.in-call-wrap-up').append(
       '<div class="in-call-wrap d-flex justify-content-between align-items-center mb-3" id="participant_' +
         connectionId +
         '"><div class="participant-img-name-wrap display-center cursor-pointer"><div class="participant-img"><img src="public/Assets/images/other.jpg" alt="" class="border border-secondary"style="height: 40px; width: 40px; border-radius: 50%" /></div><div class="participant-name ml-2">' +
         otherUserId +
         '</div></div><div class="participant-action-wrap display-center"><div class="participant-action-dot display-center mr-2 cursor-pointer">                   <span class="material-icons">more_vert</span></div><div class="participant-action-pin display-center mr-2 cursor-pointer"><span class="material-icons">push_pin</span></div></div></div>',
     )
-    $(".participant-count").text(userNumber)
+    $('.participant-count').text(userNumber)
   }
   $(document).on('click', '.people-heading', () => {
     $('.in-call-wrap-up').show(300)
     $('.chat-show-wrap').hide(300)
+    $(this).addClass('active')
+    $('.chat-heading').removeClass('active')
   })
   $(document).on('click', '.chat-heading', () => {
+    $('.in-call-wrap-up').hide(300)
+    $('.chat-show-wrap').show(300)
+    $(this).addClass('active')
+    $('.people-heading').removeClass('active')
+  })
+
+  $(document).on('click', '.meeting-heading-cross', () => {
+    $('.g-right-details-wrap').hide(300)
+  })
+  $(document).on('click', '.top-left-participant-wrap', () => {
+    $('.g-right-details-wrap').show(300)
+    $('.in-call-wrap-up').show(300)
+    $('.chat-show-wrap').hide(300)
+  })
+  $(document).on('click', '.top-left-chat-wrap', () => {
+    $('.g-right-details-wrap').show(300)
     $('.in-call-wrap-up').hide(300)
     $('.chat-show-wrap').show(300)
   })

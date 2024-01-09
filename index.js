@@ -78,8 +78,10 @@ const mountServer = () => {
           (user) => user.meeting_id === meetingId,
         )
         list.forEach((v) => {
+          let userNumberAfterUserLeave = userConnections.length
           socket.to(v.connectionId).emit('inform_about_disconnected_user', {
             connectionId: socket.id,
+            userNumber:userNumberAfterUserLeave
           })
         })
       }
