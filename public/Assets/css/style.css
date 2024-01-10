@@ -64,7 +64,7 @@ input:focus {
 
 video {
   border: 1px solid gray;
-  width: 300px;
+  width: 700px;
 }
 
 .video-wrap {
@@ -164,6 +164,7 @@ video {
   color: #000;
   border-radius: 5px;
   padding: 5px;
+  bottom:80px;
 }
 
 .g-details-heading-show {

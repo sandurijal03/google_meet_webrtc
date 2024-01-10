@@ -459,8 +459,7 @@ var MyApp = (function () {
     let url = window.location.href
     $('.meeting_url').text(url)
 
-
-    $("#divUsers").on("dblclick", "video", function() {
+    $('#divUsers').on('dblclick', 'video', function () {
       this.requestFullscreen()
     })
   }
@@ -483,13 +482,13 @@ var MyApp = (function () {
     )
     $('.participant-count').text(userNumber)
   }
-  $(document).on('click', '.people-heading', () => {
+  $(document).on('click', '.people-heading', function () {
     $('.in-call-wrap-up').show(300)
     $('.chat-show-wrap').hide(300)
     $(this).addClass('active')
     $('.chat-heading').removeClass('active')
   })
-  $(document).on('click', '.chat-heading', () => {
+  $(document).on('click', '.chat-heading', function () {
     $('.in-call-wrap-up').hide(300)
     $('.chat-show-wrap').show(300)
     $(this).addClass('active')
@@ -498,16 +497,22 @@ var MyApp = (function () {
 
   $(document).on('click', '.meeting-heading-cross', () => {
     $('.g-right-details-wrap').hide(300)
+    $('.people-heading').removeClass('active')
+    $('.chat-heading').removeClass('active')
   })
-  $(document).on('click', '.top-left-participant-wrap', () => {
+  $(document).on('click', '.top-left-participant-wrap', function () {
     $('.g-right-details-wrap').show(300)
     $('.in-call-wrap-up').show(300)
     $('.chat-show-wrap').hide(300)
+    $('.people-heading').addClass('active')
+    $('.chat-heading').removeClass('active')
   })
-  $(document).on('click', '.top-left-chat-wrap', () => {
+  $(document).on('click', '.top-left-chat-wrap', function () {
     $('.g-right-details-wrap').show(300)
     $('.in-call-wrap-up').hide(300)
     $('.chat-show-wrap').show(300)
+    $('.chat-heading').addClass('active')
+    $('.people-heading').removeClass('active')
   })
   $(document).on('click', '.end-call-wrap', () => {
     console.log('clicked')
@@ -530,6 +535,17 @@ var MyApp = (function () {
     })
   })
 
+  $(document).mouseup(function (e) {
+    let container = new Array()
+    container.push($('.g-details'))
+    container.push($('.g-right-details-wrap'))
+    $.each(container, function (key, value) {
+      if (!$(value).is(e.target) && $(value).has(e.target).length === 0) {
+        $(value).hide(300)
+      }
+    })
+  })
+
   $(document).on('click', '.call-cancel-action', function () {
     $('.top-box-show').html('')
   })
@@ -544,8 +560,23 @@ var MyApp = (function () {
       $('.link-conf').hide()
     }, 3000)
   })
-  let url = window.location.href
-  $('.meeting_url').text(url)
+  $(document).on('click', '.meeting-details-button', function () {
+    $('.g-details').slideDown(300)
+    // $('.g-details-heading-detail').addClass('active')
+    // $('.g-details-heading-attachment').removeClass('active')
+  })
+  $(document).on('click', '.g-details-heading-attachment', function () {
+    $('.g-details-heading-show').hide()
+    $('.g-details-heading-show-attachment').show()
+    $(this).addClass('active')
+    $('.g-details-heading-detail').removeClass('active')
+  })
+  $(document).on('click', '.g-details-heading-detail', function () {
+    $('.g-details-heading-show').show()
+    $('.g-details-heading-show-attachment').hide()
+    $(this).addClass('active')
+    $('.g-details-heading-attachment').removeClass('active')
+  })
   return {
     _init: function (uid, mid) {
       init(uid, mid)

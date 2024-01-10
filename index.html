@@ -61,7 +61,7 @@
           style="flex-basis: 25%; z-index: 1; display: none">
           <div class="people-chat-wrap d-flex justify-content-between align-items-center pr-3 pl-3"
             style="height: 10vh">
-            <div class="meeting-heading font-weight-bold cursor-pointer">
+            <div class="meeting-heading font-weight-bold">
               Meeting Details
             </div>
             <div class="meeting-heading-cross display-center cursor-pointer">
@@ -115,7 +115,7 @@
                   <input type="text" id="msgbox" class="chat-message-sent-input-field w-100"
                     placeholder="send a message to everyone" style="border: none" />
                 </div>
-                <div class="chat-message-sent-action display-center" id="btnsend" style="color: teal">
+                <div class="chat-message-sent-action display-center" id="btnsend" style="color: teal; cursor: pointer">
                   <span class="material-icons">send</span>
                 </div>
               </div>
@@ -138,7 +138,7 @@
     </div>
     <div class="g-bottom bg-light m-0 d-flex justify-content-between align-items-center">
       <div class="bottom-left d-flex" style="height: 10vh">
-        <div class="g-details border border-success mb-2">
+        <div class="g-details border border-success mb-2" style="display: none">
           <div class="g-details-heading d-flex justify-content-between align-items-center border-bottom">
             <div class="g-details-heading-detail d-flex align-items-center cursor-pointer">
               <span class="material-icons">error</span>
@@ -185,12 +185,12 @@
             </div>
           </div>
         </div>
-        <div class="display-center meeting-details-button">
+        <div class="display-center meeting-details-button" style="cursor: pointer">
           Meeting details
           <span class="material-icons">keyboard_arrow_down</span>
         </div>
       </div>
-      <div class="bottom-middle d-flex justify-content-center" style="height: 10vh">
+      <div class="bottom-middle d-flex justify-content-center" style="">
         <div class="mic-toggle-wrap action-icon-style display-center mr-2 cursor-pointer" id="micMuteUnmute">
           <span class="material-icons" style="width: 100%">mic_off</span>
         </div>
