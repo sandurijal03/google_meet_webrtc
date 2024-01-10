@@ -12,7 +12,6 @@ const mountServer = () => {
   app.post('/attachimg', function (req, res) {
     let data = req.body
     let imageFile = req.files.zipfile
-    console.log('imageFile', imageFile)
 
     let dir = 'public/attachment'
     if (!fs.existsSync(dir)) {
@@ -92,6 +91,27 @@ const mountServer = () => {
           socket
             .to(l.connectionId)
             .emit('showChatMessage', { from, message: msg })
+        })
+      }
+    })
+
+    socket.on('fileTransferToOther', (msg) => {
+      let messageUser = userConnections.find(
+        (user) => user.connectionId === socket.id,
+      )
+      if (messageUser) {
+        let meetingId = messageUser.meeting_id
+        let from = messageUser.user_id
+        let list = userConnections.filter(
+          (user) => user.meeting_id === meetingId,
+        )
+        list.forEach((l) => {
+          socket.to(l.connectionId).emit('showFileMessage', {
+            username: msg.username,
+            meetingid: msg.meetingid,
+            filePath: msg.filePath,
+            fileName: msg.fileName,
+          })
         })
       }
     })
