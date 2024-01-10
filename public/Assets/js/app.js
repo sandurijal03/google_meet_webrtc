@@ -1,4 +1,4 @@
-var AppProcess = (function () {
+var AppProcess = (function() {
   let peers_connection_ids = []
   let peers_connection = []
   let remote_vid_stream = []
@@ -76,7 +76,7 @@ var AppProcess = (function () {
   }
 
   function eventProcess() {
-    $('#micMuteUnmute').on('click', async function () {
+    $('#micMuteUnmute').on('click', async function() {
       if (!audio) {
         await loadAudio()
       }
@@ -99,7 +99,7 @@ var AppProcess = (function () {
       isAudioMute = !isAudioMute
     })
 
-    $('#videoCamOnOff').on('click', async function () {
+    $('#videoCamOnOff').on('click', async function() {
       if (video_state === video_states.Camera) {
         await videoProcess(video_states.None)
       } else {
@@ -107,7 +107,7 @@ var AppProcess = (function () {
       }
     })
 
-    $('#screenShareOnOff').on('click', async function () {
+    $('#screenShareOnOff').on('click', async function() {
       if (video_state === video_states.ScreenShare) {
         await videoProcess(video_states.None)
       } else {
@@ -211,11 +211,11 @@ var AppProcess = (function () {
   async function setConnection(connectionId) {
     var connection = new RTCPeerConnection(iceConfiguration)
 
-    connection.onnegotiationneeded = async function (event) {
+    connection.onnegotiationneeded = async function(event) {
       await setOffer(connectionId)
     }
 
-    connection.onicecandidate = function (event) {
+    connection.onicecandidate = function(event) {
       if (event.candidate) {
         serverProcess(
           JSON.stringify({ icecandidate: event.candidate }),
@@ -224,7 +224,7 @@ var AppProcess = (function () {
       }
     }
 
-    connection.ontrack = function (event) {
+    connection.ontrack = function(event) {
       if (!remote_vid_stream[connectionId]) {
         remote_vid_stream[connectionId] = new MediaStream()
       }
@@ -334,22 +334,22 @@ var AppProcess = (function () {
   }
 
   return {
-    setNewConnection: async function (connectionId) {
+    setNewConnection: async function(connectionId) {
       await setConnection(connectionId)
     },
-    init: async function (SDP_function, my_connectionId) {
+    init: async function(SDP_function, my_connectionId) {
       await _init(SDP_function, my_connectionId)
     },
-    processClientFunc: async function (data, from_connid) {
+    processClientFunc: async function(data, from_connid) {
       await SDPProcess(data, from_connid)
     },
-    closeConnectionCall: async function (connectionId) {
+    closeConnectionCall: async function(connectionId) {
       await closeConnection(connectionId)
     },
   }
 })()
 
-var MyApp = (function () {
+var MyApp = (function() {
   var socket = null
   let user_id = ''
   let meeting_id = ''
@@ -366,7 +366,7 @@ var MyApp = (function () {
   function event_process_for_signaling_server() {
     socket = io.connect()
 
-    let SDP_function = function (data, to_connectionId) {
+    let SDP_function = function(data, to_connectionId) {
       socket.emit('SDPProcess', {
         message: data,
         to_connectionId,
@@ -409,7 +409,7 @@ var MyApp = (function () {
       }
     })
 
-    socket.on('SDPProcess', async function (data) {
+    socket.on('SDPProcess', async function(data) {
       await AppProcess.processClientFunc(data.message, data.from_connid)
     })
 
@@ -423,11 +423,11 @@ var MyApp = (function () {
       })
       let div = $('<div>').html(
         "<span class='font-weight-bold' style='color:black'>" +
-          data.from +
-          '</span>' +
-          lTime +
-          '</br>' +
-          data.message,
+        data.from +
+        '</span>' +
+        lTime +
+        '</br>' +
+        data.message,
       )
 
       $('#messages').append(div)
@@ -446,11 +446,11 @@ var MyApp = (function () {
       })
       let div = $('<div>').html(
         "<span class='font-weight-bold' style='color:black'>" +
-          user_id +
-          '</span>' +
-          lTime +
-          '</br>' +
-          messageData,
+        user_id +
+        '</span>' +
+        lTime +
+        '</br>' +
+        messageData,
       )
 
       $('#messages').append(div)
@@ -459,7 +459,7 @@ var MyApp = (function () {
     let url = window.location.href
     $('.meeting_url').text(url)
 
-    $('#divUsers').on('dblclick', 'video', function () {
+    $('#divUsers').on('dblclick', 'video', function() {
       this.requestFullscreen()
     })
   }
@@ -475,20 +475,20 @@ var MyApp = (function () {
     $('#divUsers').append(newDivId)
     $('.in-call-wrap-up').append(
       '<div class="in-call-wrap d-flex justify-content-between align-items-center mb-3" id="participant_' +
-        connectionId +
-        '"><div class="participant-img-name-wrap display-center cursor-pointer"><div class="participant-img"><img src="public/Assets/images/other.jpg" alt="" class="border border-secondary"style="height: 40px; width: 40px; border-radius: 50%" /></div><div class="participant-name ml-2">' +
-        otherUserId +
-        '</div></div><div class="participant-action-wrap display-center"><div class="participant-action-dot display-center mr-2 cursor-pointer">                   <span class="material-icons">more_vert</span></div><div class="participant-action-pin display-center mr-2 cursor-pointer"><span class="material-icons">push_pin</span></div></div></div>',
+      connectionId +
+      '"><div class="participant-img-name-wrap display-center cursor-pointer"><div class="participant-img"><img src="public/Assets/images/other.jpg" alt="" class="border border-secondary"style="height: 40px; width: 40px; border-radius: 50%" /></div><div class="participant-name ml-2">' +
+      otherUserId +
+      '</div></div><div class="participant-action-wrap display-center"><div class="participant-action-dot display-center mr-2 cursor-pointer">                   <span class="material-icons">more_vert</span></div><div class="participant-action-pin display-center mr-2 cursor-pointer"><span class="material-icons">push_pin</span></div></div></div>',
     )
     $('.participant-count').text(userNumber)
   }
-  $(document).on('click', '.people-heading', function () {
+  $(document).on('click', '.people-heading', function() {
     $('.in-call-wrap-up').show(300)
     $('.chat-show-wrap').hide(300)
     $(this).addClass('active')
     $('.chat-heading').removeClass('active')
   })
-  $(document).on('click', '.chat-heading', function () {
+  $(document).on('click', '.chat-heading', function() {
     $('.in-call-wrap-up').hide(300)
     $('.chat-show-wrap').show(300)
     $(this).addClass('active')
@@ -500,14 +500,14 @@ var MyApp = (function () {
     $('.people-heading').removeClass('active')
     $('.chat-heading').removeClass('active')
   })
-  $(document).on('click', '.top-left-participant-wrap', function () {
+  $(document).on('click', '.top-left-participant-wrap', function() {
     $('.g-right-details-wrap').show(300)
     $('.in-call-wrap-up').show(300)
     $('.chat-show-wrap').hide(300)
     $('.people-heading').addClass('active')
     $('.chat-heading').removeClass('active')
   })
-  $(document).on('click', '.top-left-chat-wrap', function () {
+  $(document).on('click', '.top-left-chat-wrap', function() {
     $('.g-right-details-wrap').show(300)
     $('.in-call-wrap-up').hide(300)
     $('.chat-show-wrap').show(300)
@@ -515,7 +515,6 @@ var MyApp = (function () {
     $('.people-heading').removeClass('active')
   })
   $(document).on('click', '.end-call-wrap', () => {
-    console.log('clicked')
     $('.top-box-show')
       .css({
         display: 'block',
@@ -525,31 +524,32 @@ var MyApp = (function () {
       )
   })
 
-  $(document).mouseup(function (e) {
+  $(document).mouseup(function(e) {
     let container = new Array()
     container.push($('.top-box-show'))
-    $.each(container, function (key, value) {
+    $.each(container, function(key, value) {
       if (!$(value).is(e.target) && $(value).has(e.target).length === 0) {
         $(value).empty()
       }
     })
   })
 
-  $(document).mouseup(function (e) {
+  $(document).mouseup(function(e) {
     let container = new Array()
     container.push($('.g-details'))
     container.push($('.g-right-details-wrap'))
-    $.each(container, function (key, value) {
+    $.each(container, function(key, value) {
       if (!$(value).is(e.target) && $(value).has(e.target).length === 0) {
         $(value).hide(300)
       }
     })
   })
 
-  $(document).on('click', '.call-cancel-action', function () {
+  $(document).on('click', '.call-cancel-action', function() {
     $('.top-box-show').html('')
   })
-  $(document).on('click', '.copy_info', function () {
+
+  $(document).on('click', '.copy_info', function() {
     let $temp = $('<input>')
     $('body').append($temp)
     $temp.val($('.meeting_url').text()).select()
@@ -560,25 +560,60 @@ var MyApp = (function () {
       $('.link-conf').hide()
     }, 3000)
   })
-  $(document).on('click', '.meeting-details-button', function () {
+
+  $(document).on('click', '.meeting-details-button', function() {
     $('.g-details').slideDown(300)
     // $('.g-details-heading-detail').addClass('active')
     // $('.g-details-heading-attachment').removeClass('active')
   })
-  $(document).on('click', '.g-details-heading-attachment', function () {
+
+  $(document).on('click', '.g-details-heading-attachment', function() {
     $('.g-details-heading-show').hide()
     $('.g-details-heading-show-attachment').show()
     $(this).addClass('active')
     $('.g-details-heading-detail').removeClass('active')
   })
-  $(document).on('click', '.g-details-heading-detail', function () {
+
+  $(document).on('click', '.g-details-heading-detail', function() {
     $('.g-details-heading-show').show()
     $('.g-details-heading-show-attachment').hide()
     $(this).addClass('active')
     $('.g-details-heading-attachment').removeClass('active')
   })
+
+  let base_url = window.location.origin
+
+  $(document).on('onchange', '.custom-file-input', function(e) {
+    let fileName = $(this).val().split('\\').pop()
+    $(this).siblings('.custom-file-label').addClass('selected').html(fileName)
+  })
+
+  $(document).on('click', '.share-attach', function(e) {
+    e.preventDefault()
+    let att_img = $('#customFile').prop('files')[0]
+    let formData = new FormData()
+
+    formData.append('zipfile', att_img)
+    formData.append('meeting_id', meeting_id)
+    formData.append('username', user_id)
+
+    $.ajax({
+      url: base_url + '/attachimg',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function(response) {
+        console.log('response', response)
+      },
+      error: function() {
+        console.error('error')
+      },
+    })
+  })
+
   return {
-    _init: function (uid, mid) {
+    _init: function(uid, mid) {
       init(uid, mid)
     },
   }
