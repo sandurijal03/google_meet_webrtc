@@ -35,7 +35,7 @@ const mountServer = () => {
     )
   })
 
-  let server = app.listen(5000, () => {
+  let server = app.listen(process.env.port || 5000, () => {
     console.log(`listening on port ${5000}`)
   })
 
@@ -59,7 +59,7 @@ const mountServer = () => {
 
       let userCount = userConnections.length
       other_users.forEach((other_user) => {
-        socket.to(other_user.connectionId).emit('inform_others_about_me', {
+        socket.to(other_user.connection_id).emit('inform_others_about_me', {
           other_user_id: data.displayName,
           connId: socket.id,
           userNumber: userCount,
@@ -79,7 +79,7 @@ const mountServer = () => {
     socket.on('sendMessage', (msg) => {
       console.log('msg', msg)
       let messageUser = userConnections.find(
-        (user) => user.connectionId === socket.id,
+        (user) => user.connection_id === socket.id,
       )
       if (messageUser) {
         let meetingId = messageUser.meeting_id
@@ -89,7 +89,7 @@ const mountServer = () => {
         )
         list.forEach((l) => {
           socket
-            .to(l.connectionId)
+            .to(l.connection_id)
             .emit('showChatMessage', { from, message: msg })
         })
       }
@@ -97,16 +97,15 @@ const mountServer = () => {
 
     socket.on('fileTransferToOther', (msg) => {
       let messageUser = userConnections.find(
-        (user) => user.connectionId === socket.id,
+        (user) => user.connection_id === socket.id,
       )
       if (messageUser) {
         let meetingId = messageUser.meeting_id
-        let from = messageUser.user_id
         let list = userConnections.filter(
           (user) => user.meeting_id === meetingId,
         )
         list.forEach((l) => {
-          socket.to(l.connectionId).emit('showFileMessage', {
+          socket.to(l.connection_id).emit('showFileMessage', {
             username: msg.username,
             meetingid: msg.meetingid,
             filePath: msg.filePath,
@@ -118,19 +117,19 @@ const mountServer = () => {
 
     socket.on('disconnect', () => {
       let disconnectedUser = userConnections.find(
-        (user) => user.connectionId === socket.id,
+        (user) => user.connection_id === socket.id,
       )
       if (disconnectedUser) {
         let meetingId = disconnectedUser.meeting_id
         userConnections = userConnections.filter(
-          (user) => user.connectionId !== socket.id,
+          (user) => user.connection_id !== socket.id,
         )
         let list = userConnections.filter(
           (user) => user.meeting_id === meetingId,
         )
         list.forEach((v) => {
           let userNumberAfterUserLeave = userConnections.length
-          socket.to(v.connectionId).emit('inform_about_disconnected_user', {
+          socket.to(v.connection_id).emit('inform_about_disconnected_user', {
             connectionId: socket.id,
             userNumber: userNumberAfterUserLeave,
           })
